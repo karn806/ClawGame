@@ -1,0 +1,6 @@
+module Pods_ClawGame {
+  umbrella header "Pods-ClawGame-umbrella.h"
+
+  export *
+  module * { export * }
+}
