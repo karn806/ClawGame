@@ -502,6 +502,12 @@
     pirates "^4.0.0"
     source-map-support "^0.5.9"
 
+"@babel/runtime@^7.1.2":
+  version "7.1.2"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.1.2.tgz#81c89935f4647706fc54541145e6b4ecfef4b8e3"
+  dependencies:
+    regenerator-runtime "^0.12.0"
+
 "@babel/template@^7.0.0", "@babel/template@^7.1.0", "@babel/template@^7.1.2":
   version "7.1.2"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.1.2.tgz#090484a574fef5a2d2d7726a674eceda5c5b5644"
@@ -531,6 +537,10 @@
     esutils "^2.0.2"
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
+
+"@cs125/wait-until@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@cs125/wait-until/-/wait-until-0.0.3.tgz#957fc279121704845300dac47ee37a3b34c203d2"
 
 abab@^2.0.0:
   version "2.0.0"
@@ -4114,6 +4124,16 @@ react-is@^16.5.0:
   version "16.5.2"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.5.2.tgz#e2a7b7c3f5d48062eb769fcb123505eb928722e3"
 
+react-native-ble-plx@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/react-native-ble-plx/-/react-native-ble-plx-0.10.0.tgz#261b076e9bde540a2670a7fe0436a811a924040d"
+
+react-native-bluetooth-status@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-bluetooth-status/-/react-native-bluetooth-status-1.3.0.tgz#45c6b8eddec2ee54e9abefa44ca16014e5ae1f6b"
+  dependencies:
+    "@cs125/wait-until" "^0.0.3"
+
 react-native@0.57.1:
   version "0.57.1"
   resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.57.1.tgz#a8bffeac13e200b95bbebd11f7131570902e1e74"
@@ -4267,6 +4287,10 @@ regenerate@^1.4.0:
 regenerator-runtime@^0.11.0:
   version "0.11.1"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.11.1.tgz#be05ad7f9bf7d22e056f9726cee5017fbf19e2e9"
+
+regenerator-runtime@^0.12.0:
+  version "0.12.1"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.12.1.tgz#fa1a71544764c036f8c49b13a08b2594c9f8a0de"
 
 regenerator-transform@^0.13.3:
   version "0.13.3"

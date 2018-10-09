@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 
 #import <React/RCTLog.h>
+#import <React/RCTBridgeModule.h>
 #import <React/RCTRootView.h>
 
 #define TIMEOUT_SECONDS 600
