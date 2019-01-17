@@ -3,7 +3,9 @@ package com.clawgame;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.rusel.RCTBluetoothSerial.RCTBluetoothSerialPackage;
 import com.polidea.reactnativeble.BlePackage;
+import com.oblador.vectoricons.VectorIconsPackage;
 import com.solinor.bluetoothstatus.RNBluetoothManagerPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -25,7 +27,9 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RCTBluetoothSerialPackage(),
             new BlePackage(),
+            new VectorIconsPackage(),
             new RNBluetoothManagerPackage()
       );
     }

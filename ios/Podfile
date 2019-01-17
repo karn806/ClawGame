@@ -22,5 +22,7 @@ target 'ClawGame' do
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
   pod 'react-native-ble-plx', :path => '../node_modules/react-native-ble-plx'
   pod 'react-native-ble-plx-swift', :path => '../node_modules/react-native-ble-plx'
+  pod 'react-native-bluetooth-status', :path => '../node_modules/react-native-bluetooth-status'
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
 end
