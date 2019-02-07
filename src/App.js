@@ -127,34 +127,31 @@ export default class App extends React.Component {
         return (
             <ScrollView style={styles.container}>
                 <View style={styles.toolbar}>
-                    <Text style={styles.toolbarTitle}>Bluetooth Device List</Text>
+                    <Grid>
+                        <Row>
+                            <Button
+                                raised
+                                onPress={this.connect}
+                                title="Connect"
+                                color="#841584"
+                            />
+                            <Button
+                                raised
+                                onPress={this.disconnect}
+                                title="Disconnect"
+                            />
+                        </Row>
+                    </Grid>
                 </View>
-                <Button
-                    raised
-                    onPress={this.connect}
-                    title="Connect"
-                    color="#841584"
-                />
 
-                <Button
-                    raised
-                    onPress={this.disconnect}
-                    title="Disconnect"
-                />
+                <View>
+                    <Grid style={styles.textContainer}>
+                        <Text style={styles.inputText}>
+                            YAY
+                        </Text>
+                    </Grid>
+                </View>
 
-                <Grid style={styles.textContainer}>
-                    <Text style={styles.inputText}>
-
-                    </Text>
-                </Grid>
-
-
-                <AwesomeButton
-                    raised
-                    onPress={this.write("hi")}
-                >
-                    Turn on da light yo
-                </AwesomeButton>
                 <Grid>
                     <Col style={styles.leftBox}>
                         <View style={styles.controlBtn}>
