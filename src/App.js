@@ -15,18 +15,29 @@ import {Platform,
     FlatList,
     Switch,
     TouchableOpacity,
-    ToastAndroid} from 'react-native';
-// import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text } from 'native-base';
+    ToastAndroid,
+    ScrollView} from 'react-native';
+import Toast, {DURATION} from 'react-native-easy-toast'
 import { Col, Row, Grid } from "react-native-easy-grid"
 import AwesomeButton from 'react-native-really-awesome-button';
 import { BleManager } from 'react-native-ble-plx';
+import AwesomeButtonCartman from 'react-native-really-awesome-button/src/themes/cartman';
 
 export default class App extends React.Component {
+
+
 
     constructor() {
         super();
         this.manager = new BleManager();
         this.device = null;
+        this.serUUID = '';
+        this.charUUID = '';
+        this.deviceId = '';
+        this.deviceIdentifier = '';
+        this.state = {
+            showToast: false
+        };
     }
 
     componentWillMount() {
@@ -60,26 +71,61 @@ export default class App extends React.Component {
     }
 
     connect = () => {
-        this.device.connect()
-            .then((device) => {
-                return device.discoverAllServicesAndCharacteristics()
-            })
-            .then((device) => {
-                // Do work on device with services and characteristics
-            })
-            .catch((error) => {
-                // Handle errors
-            });
+        if (this.device !== null) {
+            this.device.connect()
+                .then((device) => {
+                    return this.manager.discoverAllServicesAndCharacteristicsForDevice(device.id, device.transaction.id)
+                })
+                .then((device) => {
+                    this.serUUID = device.serviceUUID;
+                    this.charUUID = device.characteristicUUID;
+                    this.deviceId = device.id;
+                    this.deviceIdentifier = device.identifier;
+                })
+                .catch((error) => {
+                    // Handle errors
+                });
+        } else {
+            console.log('some error with connection.')
+            this.refs.toast.show('Connection failed. Please try again.', DURATION.LENGTH_SHORT)
+        }
+
     }
 
     disconnect = () => {
-        this.manager.cancelDeviceConnection(this.device.id);
-        this.device = null;
+        if (this.deviceId !== '') {
+            this.manager.cancelDeviceConnection(this.deviceId);
+        } else {
+            this.refs.toast.show('not connected yet')
+        }
+    }
+
+    write = (value) => {
+        this.manager.writeCharacteristicWithResponseForDevice(
+            this.deviceId,
+            this.serUUID,
+            this.charUUID,
+            value,
+        ).then((response) => {
+            console.log('yay done')
+            console.log('response here: ', response)
+        }).catch((error) => {
+            // handle error
+        })
+    }
+
+    readData = () => {
+        this.manager.readCharacteristicForDevice(
+            this.deviceIdentifier,
+            serviceUUID,
+            characteristicUUID,
+            transactionId
+        )
     }
 
     render() {
         return (
-            <View style={styles.container}>
+            <ScrollView style={styles.container}>
                 <View style={styles.toolbar}>
                     <Text style={styles.toolbarTitle}>Bluetooth Device List</Text>
                 </View>
@@ -96,49 +142,74 @@ export default class App extends React.Component {
                     title="Disconnect"
                 />
 
+                <Grid style={styles.textContainer}>
+                    <Text style={styles.inputText}>
 
-                {/*<Grid style={styles.textContainer}>*/}
-                    {/*<Text style={styles.inputText}>*/}
-                        {/*READY!*/}
-                    {/*</Text>*/}
-                {/*</Grid>*/}
-                {/*<Grid>*/}
-                    {/*<Col style={styles.leftBox}>*/}
-                        {/*<View style={styles.controlBtn}>*/}
-                            {/*<View style={{flex: 1, flexDirection: 'row'}}>*/}
-                                {/*<View></View>*/}
-                                {/*<Button danger>*/}
-                                    {/*<Text> ^ </Text>*/}
-                                {/*</Button>*/}
-                                {/*<View></View>*/}
-                            {/*</View>*/}
-                            {/*<View style={{flex: 1, flexDirection: 'row'}}>*/}
-                                {/*<Button danger>*/}
-                                    {/*<Text> LEFT </Text>*/}
-                                {/*</Button>*/}
-                                {/*<View style={{width: 80, height: 50}} />*/}
-                                {/*<Button danger>*/}
-                                    {/*<Text> RIGHT </Text>*/}
-                                {/*</Button>*/}
-                            {/*</View>*/}
-                            {/*<View style={{flex: 1, flexDirection: 'row'}}>*/}
-                                {/*<View></View>*/}
-                                {/*<Button danger>*/}
-                                    {/*<Text> v </Text>*/}
-                                {/*</Button>*/}
-                                {/*<View></View>*/}
-                            {/*</View>*/}
-                        {/*</View>*/}
-                    {/*</Col>*/}
-                    {/*<Col style={styles.rightBox}>*/}
-                        {/*<View style={styles.grabBtn}>*/}
-                            {/*<Button danger large>*/}
-                                {/*<Text> GRAB !!! </Text>*/}
-                            {/*</Button>*/}
-                        {/*</View>*/}
-                    {/*</Col>*/}
-                {/*</Grid>*/}
-            </View>
+                    </Text>
+                </Grid>
+
+
+                <AwesomeButton
+                    raised
+                    onPress={this.write("hi")}
+                >
+                    Turn on da light yo
+                </AwesomeButton>
+                <Grid>
+                    <Col style={styles.leftBox}>
+                        <View style={styles.controlBtn}>
+                            <View style={{flex: 1, flexDirection: 'row'}}>
+                                <View></View>
+                                <AwesomeButtonCartman
+                                    type="primary"
+                                    width={80}
+                                    common>
+                                    UP
+                                </AwesomeButtonCartman>
+                                <View></View>
+                            </View>
+                            <View style={{flex: 1, flexDirection: 'row'}}>
+                                <AwesomeButtonCartman
+                                    type="primary"
+                                    width={80}
+                                    common>
+                                    LEFT
+                                </AwesomeButtonCartman>
+                                <View style={{width: 80, height: 50}} />
+                                <AwesomeButtonCartman
+                                    type="primary"
+                                    width={80}
+                                    common>
+                                    RIGHT
+                                </AwesomeButtonCartman>
+                            </View>
+                            <View style={{flex: 1, flexDirection: 'row'}}>
+                                <View></View>
+                                <AwesomeButtonCartman
+                                    type="primary"
+                                    width={80}
+                                    common>
+                                    DOWN
+                                </AwesomeButtonCartman>
+                                <View></View>
+                            </View>
+                        </View>
+                    </Col>
+                    <Col style={styles.rightBox}>
+                        <View style={styles.grabBtn}>
+                            <AwesomeButtonCartman
+                                type="secondary"
+                                height={90}
+                                width={140}
+                                common>
+                                GRAB
+                            </AwesomeButtonCartman>
+                        </View>
+                    </Col>
+                </Grid>
+
+                <Toast ref="toast"/>
+            </ScrollView>
         );
     }
 }
