@@ -22,6 +22,7 @@ import { Col, Row, Grid } from "react-native-easy-grid"
 import AwesomeButton from 'react-native-really-awesome-button';
 import { BleManager } from 'react-native-ble-plx';
 import AwesomeButtonCartman from 'react-native-really-awesome-button/src/themes/cartman';
+import base64 from 'react-native-base64'
 
 export default class App extends React.Component {
 
@@ -30,14 +31,17 @@ export default class App extends React.Component {
     constructor() {
         super();
         this.manager = new BleManager();
-        this.device = null;
-        this.serUUID = '';
-        this.charUUID = '';
-        this.deviceId = '';
-        this.deviceIdentifier = '';
         this.state = {
-            showToast: false
-        };
+            connection: false,
+            device: null,
+            serUUID: '0000FFE0-0000-1000-8000-00805F9B34FB',
+            charUUID: '0000FFE1-0000-1000-8000-00805F9B34FB',
+            // deviceId: 'D5C292CF-9F26-4D7A-D106-5181CA7B10B4',
+            deviceId: '',
+            showToast: false,
+            test: false,
+            text: 'hi',
+        }
     }
 
     componentWillMount() {
@@ -59,32 +63,85 @@ export default class App extends React.Component {
 
             // Check if it is a device you are looking for based on advertisement data
             // or other criteria.
-            if (device.name === 'JDY-09-V4.3') {
-
+            if (device.name === 'KARN-BLE') {
                 // Stop scanning as it's not necessary if you are scanning for one device.
                 this.manager.stopDeviceScan();
-                this.device = device;
 
-                // Proceed with connection.
+                this.setState({
+                    device: device,
+                    deviceId: device.id,
+                    serUUIDs: device.serviceUUIDs,
+                    serUUID: device.serviceUUIDs[0],
+                })
+
+                device.connect()
+                    .then((device) => {
+                        return device.discoverAllServicesAndCharacteristics()
+                    })
+                    .then((device) => {
+                        // yay
+                        this.setState({
+                            connection: true,
+                            charUUIDs: device.characteristicsForService(this.state.serUUID)
+                        })
+                        this.refs.toast.show('connected')
+                    })
+                    .catch((error) => {
+                        this.error(error.message)
+                    })
+
+
+                // const serviceDevice = this.manager.servicesForDevice(device.id)
+                // this.setState({
+                //     device: device,
+                //     deviceId: device.id,
+                // })
             }
         });
     }
 
     connect = () => {
-        if (this.device !== null) {
-            this.device.connect()
+        if (!this.state.connection) {
+            this.manager.connectToDevice(this.state.deviceId)
                 .then((device) => {
-                    return this.manager.discoverAllServicesAndCharacteristicsForDevice(device.id, device.transaction.id)
-                })
-                .then((device) => {
-                    this.serUUID = device.serviceUUID;
-                    this.charUUID = device.characteristicUUID;
-                    this.deviceId = device.id;
-                    this.deviceIdentifier = device.identifier;
+                    if (this.manager.isDeviceConnected(device.id)){
+                        this.setState({
+                            connection: this.manager.isDeviceConnected(device.id)
+                        })
+                    }
+                    if (this.state.connection){
+                        this.refs.toast.show('connected')
+                    }
                 })
                 .catch((error) => {
-                    // Handle errors
-                });
+                    // error
+                })
+
+
+            // this.state.device.connect()
+            //     .then((device) => {
+            //         return this.manager.discoverAllServicesAndCharacteristicsForDevice(device.id, device.transaction.id)
+            //     })
+            //     .then((device) => {
+            //         // this.refs.toast.show('connected')
+            //         this.setState({
+            //             serUUID: device.serviceUUID,
+            //             charUUID: device.characteristicUUID,
+            //             deviceId: device.id,
+            //             deviceIdentifier: device.identifier,
+            //         })
+            //         if (this.manager.isDeviceConnected(device.identifier)){
+            //             this.setState({
+            //                 connected: this.manager.isDeviceConnected(device.identifier)
+            //             })
+            //         }
+            //         if (this.state.connected){
+            //             this.refs.toast.show('connected')
+            //         }
+            //     })
+            //     .catch((error) => {
+            //         // Handle errors
+            //     });
         } else {
             console.log('some error with connection.')
             this.refs.toast.show('Connection failed. Please try again.', DURATION.LENGTH_SHORT)
@@ -93,25 +150,47 @@ export default class App extends React.Component {
     }
 
     disconnect = () => {
-        if (this.deviceId !== '') {
-            this.manager.cancelDeviceConnection(this.deviceId);
+        if (this.state.connection){
+            this.manager.cancelDeviceConnection(this.state.deviceId);
+            this.refs.toast.show('disconnected');
         } else {
-            this.refs.toast.show('not connected yet')
+            this.refs.toast.show('no device is connected')
         }
+        // this.manager.cancelDeviceConnection(this.state.deviceId)
+        // this.refs.toast.show('disconnected')
     }
 
-    write = (value) => {
-        this.manager.writeCharacteristicWithResponseForDevice(
-            this.deviceId,
-            this.serUUID,
-            this.charUUID,
-            value,
-        ).then((response) => {
-            console.log('yay done')
-            console.log('response here: ', response)
-        }).catch((error) => {
-            // handle error
+    testTwo = (msg) => {
+        this.setState({
+            text: msg
         })
+    }
+
+    send = (value) => {
+        this.manager.writeCharacteristicWithoutResponseForDevice(
+            this.state.deviceId,
+            this.state.serUUID,
+            this.state.charUUID,
+            base64.encode(value))
+            .catch((error) => {
+                console.log('error in writing data');
+                console.log(error);
+            })
+
+
+        // this.manager.writeCharacteristicWithResponseForDevice(
+        //     this.state.deviceId,
+        //     this.state.serUUID,
+        //     this.state.charUUID,
+        //     'UTF-8',
+        //     value,
+        // ).then((response) => {
+        //     this.refs.toast.show('sent.');
+        //     console.log('yay done');
+        //     console.log('response here: ', response)
+        // }).catch((error) => {
+        //     // handle error
+        // })
     }
 
     readData = () => {
@@ -128,27 +207,27 @@ export default class App extends React.Component {
             <ScrollView style={styles.container}>
                 <View style={styles.toolbar}>
                     <Grid>
-                        <Row>
-                            <Button
-                                raised
-                                onPress={this.connect}
-                                title="Connect"
-                                color="#841584"
-                            />
-                            <Button
-                                raised
-                                onPress={this.disconnect}
-                                title="Disconnect"
-                            />
-                        </Row>
+                        <Button
+                            onPress={() => {
+                                this.disconnect()
+                            }}
+                            title="disconnect"
+                        />
                     </Grid>
-                </View>
-
-                <View>
                     <Grid style={styles.textContainer}>
-                        <Text style={styles.inputText}>
-                            YAY
+                        {/*<Text style={styles.inputText}>*/}
+                            {/*{this.state.text}*/}
+                        {/*</Text>*/}
+                        <Text>
+                            {this.state.serUUID}
                         </Text>
+                    </Grid>
+                    <Grid style={styles.textContainer}>
+                        <FlatList
+                            data={this.state.charUUIDs}
+                            renderItem={({item}) => <Text>{item}</Text>}
+                        />
+                        {/*<Text>{this.state.serUUID}</Text>*/}
                     </Grid>
                 </View>
 
@@ -158,8 +237,11 @@ export default class App extends React.Component {
                             <View style={{flex: 1, flexDirection: 'row'}}>
                                 <View></View>
                                 <AwesomeButtonCartman
+                                    onPress={ () => {
+                                        this.send('F')
+                                    }}
                                     type="primary"
-                                    width={80}
+                                    width={90}
                                     common>
                                     UP
                                 </AwesomeButtonCartman>
@@ -167,15 +249,21 @@ export default class App extends React.Component {
                             </View>
                             <View style={{flex: 1, flexDirection: 'row'}}>
                                 <AwesomeButtonCartman
+                                    onPress={ () => {
+                                        this.send('F')
+                                    }}
                                     type="primary"
-                                    width={80}
+                                    width={90}
                                     common>
                                     LEFT
                                 </AwesomeButtonCartman>
                                 <View style={{width: 80, height: 50}} />
                                 <AwesomeButtonCartman
+                                    onPress={ () => {
+                                        this.send('F')
+                                    }}
                                     type="primary"
-                                    width={80}
+                                    width={90}
                                     common>
                                     RIGHT
                                 </AwesomeButtonCartman>
@@ -183,8 +271,11 @@ export default class App extends React.Component {
                             <View style={{flex: 1, flexDirection: 'row'}}>
                                 <View></View>
                                 <AwesomeButtonCartman
+                                    onPress={ () => {
+                                        this.send('F')
+                                    }}
                                     type="primary"
-                                    width={80}
+                                    width={90}
                                     common>
                                     DOWN
                                 </AwesomeButtonCartman>
@@ -195,9 +286,12 @@ export default class App extends React.Component {
                     <Col style={styles.rightBox}>
                         <View style={styles.grabBtn}>
                             <AwesomeButtonCartman
+                                onPress={() => {
+                                    this.send("N")
+                                }}
                                 type="secondary"
-                                height={90}
-                                width={140}
+                                height={110}
+                                width={160}
                                 common>
                                 GRAB
                             </AwesomeButtonCartman>
@@ -264,7 +358,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     toolbar:{
-        paddingTop:30,
+        paddingTop:10,
         paddingBottom:30,
         flexDirection:'row'
     },
