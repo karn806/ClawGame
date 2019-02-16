@@ -32,9 +32,9 @@ export default class App extends React.Component {
         super();
         this.manager = new BleManager();
         this.timer = null;
+        this.device = null;
         this.state = {
             connection: false,
-            device: null,
             serUUID: '0000FFE0-0000-1000-8000-00805F9B34FB',
             charUUID: '0000FFE1-0000-1000-8000-00805F9B34FB',
             // deviceId: 'D5C292CF-9F26-4D7A-D106-5181CA7B10B4',
@@ -68,48 +68,50 @@ export default class App extends React.Component {
                 // Stop scanning as it's not necessary if you are scanning for one device.
                 this.manager.stopDeviceScan();
 
+                this.device = device;
+
                 this.setState({
-                    device: device,
                     deviceId: device.id,
                     serUUIDs: device.serviceUUIDs,
                     serUUID: device.serviceUUIDs[0],
-                })
-
-                device.connect()
-                    .then((device) => {
-                        return device.discoverAllServicesAndCharacteristics()
-                    })
-                    .then((device) => {
-                        // yay
-                        this.setState({
-                            connection: true,
-                            charUUIDs: device.characteristicsForService(this.state.serUUID)
-                        })
-                        this.refs.toast.show('connected')
-                    })
-                    .catch((error) => {
-                        this.error(error.message)
-                    })
+                });
             }
         });
     }
 
-    connect = () => {
+    connectDevice = () => {
         if (!this.state.connection) {
-            this.manager.connectToDevice(this.state.deviceId)
+
+            this.device.connect()
                 .then((device) => {
-                    if (this.manager.isDeviceConnected(device.id)){
-                        this.setState({
-                            connection: this.manager.isDeviceConnected(device.id)
-                        })
-                    }
-                    if (this.state.connection){
-                        this.refs.toast.show('connected')
-                    }
+                    return device.discoverAllServicesAndCharacteristics()
+                })
+                .then((device) => {
+                    // yay
+                    this.setState({
+                        connection: true,
+                        charUUIDs: device.characteristicsForService(this.state.serUUID)
+                    })
+                    this.refs.toast.show('connected')
                 })
                 .catch((error) => {
-                    // error
+                    this.error(error.message)
                 })
+
+            // this.manager.connectToDevice(this.state.deviceId)
+            //     .then((device) => {
+            //         if (this.manager.isDeviceConnected(device.id)){
+            //             this.setState({
+            //                 connection: this.manager.isDeviceConnected(device.id)
+            //             })
+            //         }
+            //         if (this.state.connection){
+            //             this.refs.toast.show('connected')
+            //         }
+            //     })
+            //     .catch((error) => {
+            //         // error
+            //     })
         } else {
             console.log('some error with connection.')
             this.refs.toast.show('Connection failed. Please try again.', DURATION.LENGTH_SHORT)
@@ -117,9 +119,12 @@ export default class App extends React.Component {
 
     };
 
-    disconnect = () => {
+    disconnectDevice = () => {
         if (this.state.connection){
             this.manager.cancelDeviceConnection(this.state.deviceId);
+            this.setState({
+                connection: false,
+            })
             this.refs.toast.show('disconnected');
         } else {
             this.refs.toast.show('no device is connected')
@@ -152,7 +157,13 @@ export default class App extends React.Component {
                     <Grid>
                         <Button
                             onPress={() => {
-                                this.disconnect()
+                                this.connectDevice()
+                            }}
+                            title="connect"
+                        />
+                        <Button
+                            onPress={() => {
+                                this.disconnectDevice()
                             }}
                             title="disconnect"
                         />
