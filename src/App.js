@@ -238,7 +238,7 @@ export default class App extends React.Component {
                                 <View></View>
                                 <AwesomeButtonCartman
                                     onPress={ () => {
-                                        this.send('F')
+                                        this.send('U')
                                     }}
                                     type="primary"
                                     width={90}
@@ -250,7 +250,7 @@ export default class App extends React.Component {
                             <View style={{flex: 1, flexDirection: 'row'}}>
                                 <AwesomeButtonCartman
                                     onPress={ () => {
-                                        this.send('F')
+                                        this.send('L')
                                     }}
                                     type="primary"
                                     width={90}
@@ -260,7 +260,7 @@ export default class App extends React.Component {
                                 <View style={{width: 80, height: 50}} />
                                 <AwesomeButtonCartman
                                     onPress={ () => {
-                                        this.send('F')
+                                        this.send('R')
                                     }}
                                     type="primary"
                                     width={90}
@@ -272,7 +272,7 @@ export default class App extends React.Component {
                                 <View></View>
                                 <AwesomeButtonCartman
                                     onPress={ () => {
-                                        this.send('F')
+                                        this.send('D')
                                     }}
                                     type="primary"
                                     width={90}
@@ -287,7 +287,7 @@ export default class App extends React.Component {
                         <View style={styles.grabBtn}>
                             <AwesomeButtonCartman
                                 onPress={() => {
-                                    this.send("N")
+                                    this.send('G')
                                 }}
                                 type="secondary"
                                 height={110}
