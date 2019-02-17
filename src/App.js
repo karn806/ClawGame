@@ -16,7 +16,8 @@ import {Platform,
     Switch,
     TouchableOpacity,
     ToastAndroid,
-    ScrollView} from 'react-native';
+    ScrollView,
+    Alert} from 'react-native';
 import Toast, {DURATION} from 'react-native-easy-toast'
 import { Col, Row, Grid } from "react-native-easy-grid"
 import AwesomeButton from 'react-native-really-awesome-button';
@@ -34,6 +35,7 @@ export default class App extends React.Component {
         this.timer = null;
         this.device = null;
         this.state = {
+            scanAble: false,
             connection: false,
             serUUID: '0000FFE0-0000-1000-8000-00805F9B34FB',
             charUUID: '0000FFE1-0000-1000-8000-00805F9B34FB',
@@ -65,6 +67,9 @@ export default class App extends React.Component {
             // Check if it is a device you are looking for based on advertisement data
             // or other criteria.
             if (device.name === 'KARN-BLE') {
+                this.setState({
+                    scanAble: true,
+                });
                 // Stop scanning as it's not necessary if you are scanning for one device.
                 this.manager.stopDeviceScan();
 
@@ -80,43 +85,29 @@ export default class App extends React.Component {
     }
 
     connectDevice = () => {
-        if (!this.state.connection) {
-
-            this.device.connect()
-                .then((device) => {
-                    return device.discoverAllServicesAndCharacteristics()
-                })
-                .then((device) => {
-                    // yay
-                    this.setState({
-                        connection: true,
-                        charUUIDs: device.characteristicsForService(this.state.serUUID)
+        if (this.state.scanAble){
+            if (!this.state.connection) {
+                this.device.connect()
+                    .then((device) => {
+                        return device.discoverAllServicesAndCharacteristics()
                     })
-                    this.refs.toast.show('connected')
-                })
-                .catch((error) => {
-                    this.error(error.message)
-                })
-
-            // this.manager.connectToDevice(this.state.deviceId)
-            //     .then((device) => {
-            //         if (this.manager.isDeviceConnected(device.id)){
-            //             this.setState({
-            //                 connection: this.manager.isDeviceConnected(device.id)
-            //             })
-            //         }
-            //         if (this.state.connection){
-            //             this.refs.toast.show('connected')
-            //         }
-            //     })
-            //     .catch((error) => {
-            //         // error
-            //     })
+                    .then((device) => {
+                        this.setState({
+                            connection: true,
+                            charUUIDs: device.characteristicsForService(this.state.serUUID)
+                        })
+                        this.refs.toast.show('connected')
+                    })
+                    .catch((error) => {
+                        this.error(error.message)
+                    })
+            } else {
+                console.log('some error with connection.')
+                this.refs.toast.show('Connection failed. Please try again.', DURATION.LENGTH_SHORT)
+            }
         } else {
-            console.log('some error with connection.')
-            this.refs.toast.show('Connection failed. Please try again.', DURATION.LENGTH_SHORT)
+            Alert.alert("Please turn on bluetooth device.")
         }
-
     };
 
     disconnectDevice = () => {
@@ -151,109 +142,75 @@ export default class App extends React.Component {
     }
 
     render() {
+        const connected = this.state.connection;
+        const connect = <Button
+            onPress={() => {
+                this.connectDevice()
+            }}
+            title="connect"
+        />;
+        const disconnect = <Button
+            onPress={() => {
+                this.disconnectDevice()
+            }}
+            title="disconnect"
+        />;
+
         return (
             <ScrollView style={styles.container}>
                 <View style={styles.toolbar}>
-                    <Grid>
-                        <Button
-                            onPress={() => {
-                                this.connectDevice()
-                            }}
-                            title="connect"
-                        />
-                        <Button
-                            onPress={() => {
-                                this.disconnectDevice()
-                            }}
-                            title="disconnect"
-                        />
-                    </Grid>
-                    <Grid style={styles.textContainer}>
-                        <Text style={styles.inputText}>
-                            {this.state.text}
-                        </Text>
+                    <Grid style={styles.connectContainer}>
+                        { connected ? disconnect : connect }
                     </Grid>
                 </View>
-
                 <Grid>
                     <Col style={styles.leftBox}>
                         <View style={styles.controlBtn}>
                             <View style={{flex: 1, flexDirection: 'row'}}>
                                 <View></View>
-                                <TouchableOpacity onPressIn={() => {this.send('U')}} onPressOut={() => {this.stopTimer()}}>
+                                <TouchableOpacity
+                                    style={styles.controlButton}
+                                    onPressIn={() => {this.send('U')}}
+                                    onPressOut={() => {this.stopTimer()}}>
                                     <Text>UP</Text>
                                 </TouchableOpacity>
-                                {/*<AwesomeButtonCartman*/}
-                                    {/*onPress={ () => {*/}
-                                        {/*this.send('U')*/}
-                                    {/*}}*/}
-                                    {/*type="primary"*/}
-                                    {/*width={90}*/}
-                                    {/*common>*/}
-                                    {/*UP*/}
-                                {/*</AwesomeButtonCartman>*/}
                                 <View></View>
                             </View>
                             <View style={{flex: 1, flexDirection: 'row'}}>
-                                <TouchableOpacity onPressIn={() => {this.send('L')}} onPressOut={() => {this.stopTimer()}}>
+                                <TouchableOpacity
+                                    style={styles.controlButton}
+                                    onPressIn={() => {this.send('L')}}
+                                    onPressOut={() => {this.stopTimer()}}>
                                     <Text>LEFT</Text>
                                 </TouchableOpacity>
-                                {/*<AwesomeButtonCartman*/}
-                                    {/*onPress={ () => {*/}
-                                        {/*this.send('L')*/}
-                                    {/*}}*/}
-                                    {/*type="primary"*/}
-                                    {/*width={90}*/}
-                                    {/*common>*/}
-                                    {/*LEFT*/}
-                                {/*</AwesomeButtonCartman>*/}
                                 <View style={{width: 80, height: 50}} />
-                                <TouchableOpacity onPressIn={() => {this.send('R')}} onPressOut={() => {this.stopTimer()}}>
+                                <TouchableOpacity
+                                    style={styles.controlButton}
+                                    onPressIn={() => {this.send('R')}}
+                                    onPressOut={() => {this.stopTimer()}}>
                                     <Text>RIGHT</Text>
                                 </TouchableOpacity>
-                                {/*<AwesomeButtonCartman*/}
-                                    {/*onPress={ () => {*/}
-                                        {/*this.send('R')*/}
-                                    {/*}}*/}
-                                    {/*type="primary"*/}
-                                    {/*width={90}*/}
-                                    {/*common>*/}
-                                    {/*RIGHT*/}
-                                {/*</AwesomeButtonCartman>*/}
                             </View>
                             <View style={{flex: 1, flexDirection: 'row'}}>
                                 <View></View>
-                                <TouchableOpacity onPressIn={() => {this.send('D')}} onPressOut={() => {this.stopTimer()}}>
+                                <TouchableOpacity
+                                    style={styles.controlButton}
+                                    onPressIn={() => {this.send('D')}}
+                                    onPressOut={() => {this.stopTimer()}}>
                                     <Text>DOWN</Text>
                                 </TouchableOpacity>
-                                {/*<AwesomeButtonCartman*/}
-                                    {/*onPress={ () => {*/}
-                                        {/*this.send('D')*/}
-                                    {/*}}*/}
-                                    {/*type="primary"*/}
-                                    {/*width={90}*/}
-                                    {/*common>*/}
-                                    {/*DOWN*/}
-                                {/*</AwesomeButtonCartman>*/}
                                 <View></View>
                             </View>
                         </View>
                     </Col>
                     <Col style={styles.rightBox}>
                         <View style={styles.grabBtn}>
-                            <TouchableOpacity onPressIn={() => {this.send('G')}} onPressOut={() => {this.stopTimer()}}>
-                                <Text>GRAB</Text>
+                            <TouchableOpacity
+                                style={styles.grabButton}
+                                onPressIn={() => {this.send('G')}}
+                                onPressOut={() => {this.stopTimer()}}>
+                                <Text style={styles.grabText}>GRAB</Text>
                             </TouchableOpacity>
-                            {/*<AwesomeButtonCartman*/}
-                                {/*onPress={() => {*/}
-                                    {/*this.send('G')*/}
-                                {/*}}*/}
-                                {/*type="secondary"*/}
-                                {/*height={110}*/}
-                                {/*width={160}*/}
-                                {/*common>*/}
-                                {/*GRAB*/}
-                            {/*</AwesomeButtonCartman>*/}
                         </View>
                     </Col>
                 </Grid>
@@ -275,12 +232,48 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    connectContainer:{
+      marginLeft: 25,
+    },
+    controlButton: {
+        shadowColor: '#000', // IOS
+        shadowOffset: { height: 2, width: 2 }, // IOS
+        shadowOpacity: 1, // IOS
+        shadowRadius: 1, //IOS
+        backgroundColor: '#FFD33C',
+        elevation: 2, // Android
+        height: 50,
+        width: 80,
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
+    },
+    grabButton: {
+        shadowColor: '#000', // IOS
+        shadowOffset: { height: 2, width: 2 }, // IOS
+        shadowOpacity: 1, // IOS
+        shadowRadius: 1, //IOS
+        backgroundColor: '#F00626',
+        elevation: 2, // Android
+        height: 150,
+        width: 200,
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
+    },
+    grabText: {
+        fontSize: 40,
+    },
     inputText: {
       fontSize: 40,
     },
     grabBtn: {
         justifyContent: 'center',
         alignItems: 'center',
+        marginTop: 40,
+        marginBottom: 40,
         // backgroundColor: '#EB5EBC',
     },
     controlBtn: {
@@ -288,6 +281,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         // backgroundColor: '#F7DC2B',
+        margin: 40,
+        marginLeft: 40
     },
     welcome: {
         fontSize: 20,
@@ -303,12 +298,14 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        margin: 30,
         // backgroundColor: '#F7DC2B',
     },
     rightBox: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        margin: 30,
         // backgroundColor: '#EB5EBC',
     },
     gridContainer: {
