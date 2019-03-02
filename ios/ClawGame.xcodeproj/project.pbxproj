@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -56,6 +55,9 @@
 		EBACDE03216A4FD300B4BC8A /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBACDE02216A4FD300B4BC8A /* File.swift */; };
 		ECEAFB02B32B409D962981E8 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 75C131E3A6DF423788AFE7EE /* Foundation.ttf */; };
 		FAB1F24BAC5B4228B2AFEC38 /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D3D0D6839DDD4EDD9569DA6E /* FontAwesome5_Regular.ttf */; };
+		6C487B65833C4EB99DC2B9A8 /* ArcadeClassic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 11DCB86235894E4883440AF9 /* ArcadeClassic.ttf */; };
+		B0D4A31B89474F9C86DE20F5 /* ka1.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F89113794BF347CBBBE75D2D /* ka1.ttf */; };
+		9AA81E23CD9546ECBCB9BDB0 /* KarmaFuture.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6D36263BB6CE42D8AC0FA272 /* KarmaFuture.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -390,6 +392,9 @@
 		F4D601EC5F7F4934A574BB39 /* RCTBluetoothSerial.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTBluetoothSerial.xcodeproj; path = "../node_modules/react-native-bluetooth-serial/ios/RCTBluetoothSerial.xcodeproj"; sourceTree = "<group>"; };
 		F611010E6D28488B9399120A /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		FCEB40C8C6ED2D093692A6ED /* Pods-ClawGame.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ClawGame.release.xcconfig"; path = "Pods/Target Support Files/Pods-ClawGame/Pods-ClawGame.release.xcconfig"; sourceTree = "<group>"; };
+		11DCB86235894E4883440AF9 /* ArcadeClassic.ttf */ = {isa = PBXFileReference; name = "ArcadeClassic.ttf"; path = "../assets/fonts/ArcadeClassic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F89113794BF347CBBBE75D2D /* ka1.ttf */ = {isa = PBXFileReference; name = "ka1.ttf"; path = "../assets/fonts/ka1.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		6D36263BB6CE42D8AC0FA272 /* KarmaFuture.ttf */ = {isa = PBXFileReference; name = "KarmaFuture.ttf"; path = "../assets/fonts/KarmaFuture.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -593,6 +598,9 @@
 				F611010E6D28488B9399120A /* Octicons.ttf */,
 				B4F234B3CDEB47DE8AB8E7C4 /* SimpleLineIcons.ttf */,
 				76B185CB461A4BCE8B284FC8 /* Zocial.ttf */,
+				11DCB86235894E4883440AF9 /* ArcadeClassic.ttf */,
+				F89113794BF347CBBBE75D2D /* ka1.ttf */,
+				6D36263BB6CE42D8AC0FA272 /* KarmaFuture.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1185,6 +1193,9 @@
 				7C6363A02DCA43E98EF91829 /* Octicons.ttf in Resources */,
 				A3FD0C1FF9E84E29826F0039 /* SimpleLineIcons.ttf in Resources */,
 				3B20568FAF5A4C8DAA51A202 /* Zocial.ttf in Resources */,
+				6C487B65833C4EB99DC2B9A8 /* ArcadeClassic.ttf in Resources */,
+				B0D4A31B89474F9C86DE20F5 /* ka1.ttf in Resources */,
+				9AA81E23CD9546ECBCB9BDB0 /* KarmaFuture.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

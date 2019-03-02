@@ -15,19 +15,21 @@ import {Platform,
     FlatList,
     Switch,
     TouchableOpacity,
+    TouchableHighlight,
     ToastAndroid,
+    TouchableWithoutFeedback,
     ScrollView,
-    Alert} from 'react-native';
+    Alert,
+    Image, ImageBackground} from 'react-native';
 import Toast, {DURATION} from 'react-native-easy-toast'
-import { Col, Row, Grid } from "react-native-easy-grid"
+import { Col, Row, Grid } from 'react-native-easy-grid'
 import AwesomeButton from 'react-native-really-awesome-button';
-import { BleManager } from 'react-native-ble-plx';
+import { BleManager } from 'react-native-ble-plx'
 import AwesomeButtonCartman from 'react-native-really-awesome-button/src/themes/cartman';
 import base64 from 'react-native-base64'
+import { Fonts } from './utils/Fonts'
 
 export default class App extends React.Component {
-
-
 
     constructor() {
         super();
@@ -124,6 +126,19 @@ export default class App extends React.Component {
         // this.refs.toast.show('disconnected')
     };
 
+    sendHold = (value) => {
+        this.manager.writeCharacteristicWithoutResponseForDevice(
+            this.state.deviceId,
+            this.state.serUUID,
+            this.state.charUUID,
+            base64.encode(value))
+            .catch((error) => {
+                console.log('error in writing data');
+                console.log(error);
+            })
+        this.timer = setTimeout(() => {this.sendHold(value)}, 100);
+    };
+
     send = (value) => {
         this.manager.writeCharacteristicWithoutResponseForDevice(
             this.state.deviceId,
@@ -134,7 +149,6 @@ export default class App extends React.Component {
                 console.log('error in writing data');
                 console.log(error);
             })
-        this.timer = setTimeout(() => {this.send(value)}, 100);
     };
 
     stopTimer = () => {
@@ -143,79 +157,86 @@ export default class App extends React.Component {
 
     render() {
         const connected = this.state.connection;
-        const connect = <Button
+        const connect = <TouchableOpacity
+            style={styles.connectBtn}
             onPress={() => {
                 this.connectDevice()
-            }}
-            title="connect"
-        />;
-        const disconnect = <Button
+            }}>
+            <Text>Connect</Text>
+        </TouchableOpacity>;
+        const disconnect = <TouchableOpacity
+            style={styles.connectBtn}
             onPress={() => {
                 this.disconnectDevice()
-            }}
-            title="disconnect"
-        />;
+            }}>
+            <Text>Disconnect</Text>
+        </TouchableOpacity>;
 
         return (
             <ScrollView style={styles.container}>
-                <View style={styles.toolbar}>
-                    <Grid style={styles.connectContainer}>
-                        { connected ? disconnect : connect }
+                <ImageBackground source={require('./static/bg2.png')} style={styles.bgImage}>
+                    <View style={styles.toolbar}>
+                        <Grid style={styles.connectContainer}>
+                            { connected ? disconnect : connect }
+                        </Grid>
+                    </View>
+                    <Grid>
+                        <Col style={styles.leftBox}>
+                            <View style={styles.controlBtn}>
+                                <View style={{flex: 1, flexDirection: 'row'}}>
+                                    <View></View>
+                                    <TouchableOpacity
+                                        style={styles.controlButton}
+                                        onPressIn={() => {this.sendHold('U')}}
+                                        onPressOut={() => {this.stopTimer()}}>
+                                        <Image source={require('./static/upBtn.png')}></Image>
+                                        {/*<Text>UP</Text>*/}
+                                    </TouchableOpacity>
+                                    <View></View>
+                                </View>
+                                <View style={{flex: 1, flexDirection: 'row'}}>
+                                    <TouchableOpacity
+                                        style={styles.controlButton}
+                                        onPressIn={() => {this.sendHold('L')}}
+                                        onPressOut={() => {this.stopTimer()}}>
+                                        <Image source={require('./static/leftBtn.png')}></Image>
+                                        {/*<Text>LEFT</Text>*/}
+                                    </TouchableOpacity>
+                                    <View style={{width: 80, height: 50}} />
+                                    <TouchableOpacity
+                                        style={styles.controlButton}
+                                        onPressIn={() => {this.sendHold('R')}}
+                                        onPressOut={() => {this.stopTimer()}}>
+                                        <Image source={require('./static/rightBtn.png')}></Image>
+                                        {/*<Text>RIGHT</Text>*/}
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={{flex: 1, flexDirection: 'row'}}>
+                                    <View></View>
+                                    <TouchableOpacity
+                                        style={styles.controlButton}
+                                        onPressIn={() => {this.sendHold('D')}}
+                                        onPressOut={() => {this.stopTimer()}}>
+                                        <Image source={require('./static/downBtn.png')}></Image>
+                                        {/*<Text>DOWN</Text>*/}
+                                    </TouchableOpacity>
+                                    <View></View>
+                                </View>
+                            </View>
+                        </Col>
+                        <Col style={styles.rightBox}>
+                            <View style={styles.grabBtn}>
+                                <TouchableOpacity
+                                    style={styles.grabButton}
+                                    onPress={() => {this.send('G')}}>
+                                    {/*<Text style={styles.grabText}>GRAB</Text>*/}
+                                    <Image source={require('./static/grab.png')}></Image>
+                                </TouchableOpacity>
+                            </View>
+                        </Col>
                     </Grid>
-                </View>
-                <Grid>
-                    <Col style={styles.leftBox}>
-                        <View style={styles.controlBtn}>
-                            <View style={{flex: 1, flexDirection: 'row'}}>
-                                <View></View>
-                                <TouchableOpacity
-                                    style={styles.controlButton}
-                                    onPressIn={() => {this.send('U')}}
-                                    onPressOut={() => {this.stopTimer()}}>
-                                    <Text>UP</Text>
-                                </TouchableOpacity>
-                                <View></View>
-                            </View>
-                            <View style={{flex: 1, flexDirection: 'row'}}>
-                                <TouchableOpacity
-                                    style={styles.controlButton}
-                                    onPressIn={() => {this.send('L')}}
-                                    onPressOut={() => {this.stopTimer()}}>
-                                    <Text>LEFT</Text>
-                                </TouchableOpacity>
-                                <View style={{width: 80, height: 50}} />
-                                <TouchableOpacity
-                                    style={styles.controlButton}
-                                    onPressIn={() => {this.send('R')}}
-                                    onPressOut={() => {this.stopTimer()}}>
-                                    <Text>RIGHT</Text>
-                                </TouchableOpacity>
-                            </View>
-                            <View style={{flex: 1, flexDirection: 'row'}}>
-                                <View></View>
-                                <TouchableOpacity
-                                    style={styles.controlButton}
-                                    onPressIn={() => {this.send('D')}}
-                                    onPressOut={() => {this.stopTimer()}}>
-                                    <Text>DOWN</Text>
-                                </TouchableOpacity>
-                                <View></View>
-                            </View>
-                        </View>
-                    </Col>
-                    <Col style={styles.rightBox}>
-                        <View style={styles.grabBtn}>
-                            <TouchableOpacity
-                                style={styles.grabButton}
-                                onPressIn={() => {this.send('G')}}
-                                onPressOut={() => {this.stopTimer()}}>
-                                <Text style={styles.grabText}>GRAB</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </Col>
-                </Grid>
-
-                <Toast ref="toast"/>
+                    <Toast ref="toast"/>
+                </ImageBackground>
             </ScrollView>
         );
     }
@@ -224,37 +245,59 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        fontFamily: Fonts.KarmaFuture,
         // justifyContent: 'center',
         // alignItems: 'center',
-        // backgroundColor: '#F5FCFF',
+        backgroundColor: '#2d66a0',
     },
     textContainer: {
         justifyContent: 'center',
         alignItems: 'center',
     },
-    connectContainer:{
-      marginLeft: 25,
+    bgImage: {
+        flex: 1,
+        resizeMode: 'cover',
     },
-    controlButton: {
-        shadowColor: '#000', // IOS
-        shadowOffset: { height: 2, width: 2 }, // IOS
+    connectContainer:{
+        marginLeft: 25,
+        color: '#000',
+    },
+    connectBtn:{
+        color: '#000',
+        marginTop: 10,
+        // shadowColor: '#FFF', // IOS
+        shadowOffset: { height: 1, width: 1 }, // IOS
         shadowOpacity: 1, // IOS
         shadowRadius: 1, //IOS
-        backgroundColor: '#FFD33C',
+        backgroundColor: '#E8E8E8',
         elevation: 2, // Android
-        height: 50,
-        width: 80,
-        borderRadius: 10,
+        height: 40,
+        width: 75,
+        borderRadius: 3,
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
+    },
+    controlButton: {
+        shadowColor: '#FFF', // IOS
+        shadowOffset: { height: 1, width: 1 }, // IOS
+        shadowOpacity: 1, // IOS
+        shadowRadius: 1, //IOS
+        // backgroundColor: '#FFF',
+        elevation: 2, // Android
+        height: 60,
+        width: 85,
+        borderRadius: 1,
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'row',
     },
     grabButton: {
-        shadowColor: '#000', // IOS
-        shadowOffset: { height: 2, width: 2 }, // IOS
+        shadowColor: '#FFF', // IOS
+        shadowOffset: { height: 3, width: 3 }, // IOS
         shadowOpacity: 1, // IOS
-        shadowRadius: 1, //IOS
-        backgroundColor: '#F00626',
+        shadowRadius: 3, //IOS
+        // backgroundColor: '#FFF',
         elevation: 2, // Android
         height: 150,
         width: 200,
