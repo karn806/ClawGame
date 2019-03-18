@@ -41,11 +41,8 @@ export default class App extends React.Component {
             connection: false,
             serUUID: '0000FFE0-0000-1000-8000-00805F9B34FB',
             charUUID: '0000FFE1-0000-1000-8000-00805F9B34FB',
-            // deviceId: 'D5C292CF-9F26-4D7A-D106-5181CA7B10B4',
             deviceId: '',
             showToast: false,
-            test: false,
-            text: 'hi',
         }
     }
 
@@ -136,7 +133,7 @@ export default class App extends React.Component {
                 console.log('error in writing data');
                 console.log(error);
             })
-        this.timer = setTimeout(() => {this.sendHold(value)}, 100);
+        this.timer = setTimeout(() => {this.sendHold(value)}, 80);
     };
 
     send = (value) => {
@@ -153,7 +150,7 @@ export default class App extends React.Component {
 
     stopTimer = () => {
         clearTimeout(this.timer);
-    }
+    };
 
     render() {
         const connected = this.state.connection;
@@ -272,7 +269,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#E8E8E8',
         elevation: 2, // Android
         height: 40,
-        width: 75,
+        width: 87,
         borderRadius: 3,
         justifyContent: 'center',
         alignItems: 'center',

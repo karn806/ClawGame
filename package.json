@@ -24,6 +24,7 @@
     "react-native-easy-toast": "^1.1.0",
     "react-native-gamepad-controller": "^0.1.0",
     "react-native-really-awesome-button": "^0.8.3",
+    "react-native-timer-countdown": "^4.0.7",
     "react-native-vector-icons": "^6.1.0",
     "react-navigation": "^2.18.0",
     "utf8": "^3.0.0"
