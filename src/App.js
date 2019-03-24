@@ -28,7 +28,6 @@ import AwesomeButton from 'react-native-really-awesome-button';
 import { BleManager } from 'react-native-ble-plx'
 import AwesomeButtonCartman from 'react-native-really-awesome-button/src/themes/cartman';
 import base64 from 'react-native-base64'
-import { Fonts } from './utils/Fonts'
 
 export default class App extends React.Component {
 
@@ -289,7 +288,6 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        fontFamily: Fonts.KarmaFuture,
         // justifyContent: 'center',
         // alignItems: 'center',
         backgroundColor: '#2d66a0',
@@ -300,11 +298,12 @@ const styles = StyleSheet.create({
         paddingRight: 130,
     },
     countDownFont: {
-        fontSize: 40,
+        fontSize: 50,
+        fontFamily: 'KarmaFuture',
     },
     textGrid: {
         paddingTop: 60,
-        paddingRight: 250,
+        paddingRight: 300,
     },
     bgImage: {
         flex: 1,
