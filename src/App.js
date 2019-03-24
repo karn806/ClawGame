@@ -20,6 +20,7 @@ import {Platform,
     TouchableWithoutFeedback,
     ScrollView,
     Alert,
+    Modal,
     Image, ImageBackground} from 'react-native';
 import Toast, {DURATION} from 'react-native-easy-toast'
 import { Col, Row, Grid } from 'react-native-easy-grid'
@@ -43,6 +44,10 @@ export default class App extends React.Component {
             charUUID: '0000FFE1-0000-1000-8000-00805F9B34FB',
             deviceId: '',
             showToast: false,
+            count: 30,
+            singleDigit: false,
+            gameStart: false,
+            modalVisible: false,
         }
     }
 
@@ -54,6 +59,37 @@ export default class App extends React.Component {
             }
         }, true);
     }
+
+    startCountDown = () => {
+        this.myInterval = setInterval(() => {
+            this.clockWork();
+        }, 1000)
+    }
+
+    clockWork = () => {
+        if (this.state.count !== 0){
+            if (this.state.count < 10){
+                this.setState({singleDigit: true});
+            }
+            this.setState(prevState => ({
+                count: prevState.count - 1
+            }))
+        } else {
+            Alert.alert("TIME'S UP!!!")
+            this.setState({
+                singleDigit: false,
+                gameStart: false,
+                count: 30,
+            })
+            clearInterval(this.myInterval)
+        }
+
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.myInterval)
+    }
+
 
     scanAndConnect = () => {
         this.manager.startDeviceScan(null, null, (error, device) => {
@@ -124,6 +160,9 @@ export default class App extends React.Component {
     };
 
     sendHold = (value) => {
+        if (!this.state.gameStart){
+            this.startCountDown();
+        }
         this.manager.writeCharacteristicWithoutResponseForDevice(
             this.state.deviceId,
             this.state.serUUID,
@@ -153,6 +192,10 @@ export default class App extends React.Component {
     };
 
     render() {
+        const count = this.state.count;
+        const singleDigit = this.state.singleDigit;
+        const countStart = '00:'+count;
+        const countSingle = '00:0'+count;
         const connected = this.state.connection;
         const connect = <TouchableOpacity
             style={styles.connectBtn}
@@ -175,6 +218,13 @@ export default class App extends React.Component {
                     <View style={styles.toolbar}>
                         <Grid style={styles.connectContainer}>
                             { connected ? disconnect : connect }
+                        </Grid>
+                    </View>
+                    <View style={styles.textContainer}>
+                        <Grid>
+                            <Text style={styles.countDownFont}>
+                                {singleDigit ? countSingle : countStart}
+                            </Text>
                         </Grid>
                     </View>
                     <Grid>
@@ -250,6 +300,10 @@ const styles = StyleSheet.create({
     textContainer: {
         justifyContent: 'center',
         alignItems: 'center',
+        paddingRight: 130,
+    },
+    countDownFont: {
+        fontSize: 20,
     },
     bgImage: {
         flex: 1,
