@@ -47,7 +47,6 @@ export default class App extends React.Component {
             count: 30,
             singleDigit: false,
             gameStart: false,
-            modalVisible: false,
         }
     }
 
@@ -75,7 +74,8 @@ export default class App extends React.Component {
                 count: prevState.count - 1
             }))
         } else {
-            Alert.alert("TIME'S UP!!!")
+            Alert.alert("TIME'S UP!!!");
+            this.send('G');
             this.setState({
                 singleDigit: false,
                 gameStart: false,
@@ -89,7 +89,6 @@ export default class App extends React.Component {
     componentWillUnmount() {
         clearInterval(this.myInterval)
     }
-
 
     scanAndConnect = () => {
         this.manager.startDeviceScan(null, null, (error, device) => {
@@ -213,27 +212,25 @@ export default class App extends React.Component {
         </TouchableOpacity>;
 
         return (
-            <ScrollView style={styles.container}>
+            <View style={styles.container}>
                 <ImageBackground source={require('./static/bg2.png')} style={styles.bgImage}>
                     <View style={styles.toolbar}>
                         <Grid style={styles.connectContainer}>
                             { connected ? disconnect : connect }
                         </Grid>
-                    </View>
-                    <View style={styles.textContainer}>
-                        <Grid>
+                        <Grid style={styles.textGrid}>
                             <Text style={styles.countDownFont}>
                                 {singleDigit ? countSingle : countStart}
                             </Text>
                         </Grid>
                     </View>
-                    <Grid>
+                    <Grid style={{paddingBottom: 15}}>
                         <Col style={styles.leftBox}>
                             <View style={styles.controlBtn}>
                                 <View style={{flex: 1, flexDirection: 'row'}}>
                                     <View></View>
                                     <TouchableOpacity
-                                        style={styles.controlButton}
+                                        style={styles.upBtn}
                                         onPressIn={() => {this.sendHold('U')}}
                                         onPressOut={() => {this.stopTimer()}}>
                                         <Image source={require('./static/upBtn.png')}></Image>
@@ -261,7 +258,7 @@ export default class App extends React.Component {
                                 <View style={{flex: 1, flexDirection: 'row'}}>
                                     <View></View>
                                     <TouchableOpacity
-                                        style={styles.controlButton}
+                                        style={styles.downBtn}
                                         onPressIn={() => {this.sendHold('D')}}
                                         onPressOut={() => {this.stopTimer()}}>
                                         <Image source={require('./static/downBtn.png')}></Image>
@@ -284,7 +281,7 @@ export default class App extends React.Component {
                     </Grid>
                     <Toast ref="toast"/>
                 </ImageBackground>
-            </ScrollView>
+            </View>
         );
     }
 }
@@ -303,7 +300,11 @@ const styles = StyleSheet.create({
         paddingRight: 130,
     },
     countDownFont: {
-        fontSize: 20,
+        fontSize: 40,
+    },
+    textGrid: {
+        paddingTop: 60,
+        paddingRight: 250,
     },
     bgImage: {
         flex: 1,
@@ -312,6 +313,9 @@ const styles = StyleSheet.create({
     connectContainer:{
         marginLeft: 25,
         color: '#000',
+    },
+    controlBox: {
+      margin: 10,
     },
     connectBtn:{
         color: '#000',
@@ -329,6 +333,37 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
     },
+    upBtn: {
+        shadowColor: '#FFF', // IOS
+        shadowOffset: { height: 1, width: 1 }, // IOS
+        shadowOpacity: 1, // IOS
+        shadowRadius: 1, //IOS
+        // backgroundColor: '#FFF',
+        elevation: 2, // Android
+        height: 60,
+        width: 85,
+        borderRadius: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
+        marginBottom: 50,
+        paddingBottom: 48
+    },
+    downBtn: {
+        shadowColor: '#FFF', // IOS
+        shadowOffset: { height: 1, width: 1 }, // IOS
+        shadowOpacity: 1, // IOS
+        shadowRadius: 1, //IOS
+        // backgroundColor: '#FFF',
+        elevation: 2, // Android
+        height: 60,
+        width: 85,
+        borderRadius: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
+        marginTop: 32
+    },
     controlButton: {
         shadowColor: '#FFF', // IOS
         shadowOffset: { height: 1, width: 1 }, // IOS
@@ -342,6 +377,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'row',
+        margin: 10,
+        paddingBottom: 10
     },
     grabButton: {
         shadowColor: '#FFF', // IOS
@@ -356,12 +393,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'row',
+        paddingTop: 18
     },
     grabText: {
         fontSize: 40,
-    },
-    inputText: {
-      fontSize: 40,
     },
     grabBtn: {
         justifyContent: 'center',
