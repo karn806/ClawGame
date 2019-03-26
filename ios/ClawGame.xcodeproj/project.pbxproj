@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -56,6 +57,8 @@
 		DFDBC070481447579DCD152D /* libRCTBluetoothSerial.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4043E72CBB3F487B9DE1CA70 /* libRCTBluetoothSerial.a */; };
 		E0C5A381262A49FC811C0651 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 390C803EF9CB4354B4780551 /* EvilIcons.ttf */; };
 		EBACDE03216A4FD300B4BC8A /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBACDE02216A4FD300B4BC8A /* File.swift */; };
+		EBEFDAE1224A187A00E980E2 /* appIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = EBEFDAE0224A187A00E980E2 /* appIcon.png */; };
+		EBEFDAE3224A1B5B00E980E2 /* launchImg.png in Resources */ = {isa = PBXBuildFile; fileRef = EBEFDAE2224A1B5B00E980E2 /* launchImg.png */; };
 		ECEAFB02B32B409D962981E8 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 75C131E3A6DF423788AFE7EE /* Foundation.ttf */; };
 		FAB1F24BAC5B4228B2AFEC38 /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D3D0D6839DDD4EDD9569DA6E /* FontAwesome5_Regular.ttf */; };
 /* End PBXBuildFile section */
@@ -392,6 +395,8 @@
 		EA764858F69D922222281890 /* libPods-ClawGame.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ClawGame.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBACDE02216A4FD300B4BC8A /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		EBACDE2A216A51B900B4BC8A /* ClawGame-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ClawGame-Bridging-Header.h"; sourceTree = "<group>"; };
+		EBEFDAE0224A187A00E980E2 /* appIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = appIcon.png; path = ../../Design/photoshop/appIcon.png; sourceTree = "<group>"; };
+		EBEFDAE2224A1B5B00E980E2 /* launchImg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = launchImg.png; path = ../../Design/photoshop/launchImg.png; sourceTree = "<group>"; };
 		F151B93DB6DB49A6BAC875FF /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		F190FBE4C02CFE563B0A771F /* Pods-ClawGame.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ClawGame.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ClawGame/Pods-ClawGame.debug.xcconfig"; sourceTree = "<group>"; };
 		F4D601EC5F7F4934A574BB39 /* RCTBluetoothSerial.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTBluetoothSerial.xcodeproj; path = "../node_modules/react-native-bluetooth-serial/ios/RCTBluetoothSerial.xcodeproj"; sourceTree = "<group>"; };
@@ -543,6 +548,8 @@
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
+				EBEFDAE2224A1B5B00E980E2 /* launchImg.png */,
+				EBEFDAE0224A187A00E980E2 /* appIcon.png */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				EBACDE02216A4FD300B4BC8A /* File.swift */,
@@ -1184,11 +1191,13 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				EBEFDAE1224A187A00E980E2 /* appIcon.png in Resources */,
 				6CB81FBB8D914BF29F4A1100 /* AntDesign.ttf in Resources */,
 				B27DD91AC59B4E0EB8B50129 /* Entypo.ttf in Resources */,
 				E0C5A381262A49FC811C0651 /* EvilIcons.ttf in Resources */,
 				02547F90882647FABD958739 /* Feather.ttf in Resources */,
 				0DF97BE22352423CB3FB17E6 /* FontAwesome.ttf in Resources */,
+				EBEFDAE3224A1B5B00E980E2 /* launchImg.png in Resources */,
 				51EA042305A849EEAF89DAC6 /* FontAwesome5_Brands.ttf in Resources */,
 				FAB1F24BAC5B4228B2AFEC38 /* FontAwesome5_Regular.ttf in Resources */,
 				DCBE8BAC3AAA46BA85DE1BF6 /* FontAwesome5_Solid.ttf in Resources */,
@@ -1235,7 +1244,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1454,6 +1463,7 @@
 					"$(SRCROOT)/../node_modules/react-native-bluetooth-serial/ios/RCTBluetoothSerial",
 				);
 				INFOPLIST_FILE = ClawGame/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1486,6 +1496,7 @@
 					"$(SRCROOT)/../node_modules/react-native-bluetooth-serial/ios/RCTBluetoothSerial",
 				);
 				INFOPLIST_FILE = ClawGame/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",

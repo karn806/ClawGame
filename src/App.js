@@ -43,7 +43,7 @@ export default class App extends React.Component {
             charUUID: '0000FFE1-0000-1000-8000-00805F9B34FB',
             deviceId: '',
             showToast: false,
-            count: 30,
+            count: 15,
             singleDigit: false,
             gameStart: false,
         }
@@ -65,20 +65,20 @@ export default class App extends React.Component {
     }
 
     clockWork = () => {
-        if (this.state.count !== 0){
-            if (this.state.count < 10){
+        if (this.state.count > 0){
+            if (this.state.count <= 10){
                 this.setState({singleDigit: true});
             }
             this.setState(prevState => ({
                 count: prevState.count - 1
             }))
-        } else {
+        } else if(this.state.count === 0) {
             Alert.alert("TIME'S UP!!!");
             this.send('G');
             this.setState({
                 singleDigit: false,
                 gameStart: false,
-                count: 30,
+                count: 15,
             })
             clearInterval(this.myInterval)
         }
@@ -160,6 +160,9 @@ export default class App extends React.Component {
     sendHold = (value) => {
         if (!this.state.gameStart){
             this.startCountDown();
+            this.setState({
+                gameStart: true,
+            })
         }
         this.manager.writeCharacteristicWithoutResponseForDevice(
             this.state.deviceId,
@@ -174,6 +177,12 @@ export default class App extends React.Component {
     };
 
     send = (value) => {
+        clearInterval(this.myInterval);
+        this.setState({
+            singleDigit: false,
+            gameStart: false,
+            count: 15,
+        });
         this.manager.writeCharacteristicWithoutResponseForDevice(
             this.state.deviceId,
             this.state.serUUID,
