@@ -7,26 +7,11 @@
  */
 
 import React from 'react';
-import {Platform,
-    StyleSheet,
-    Text,
-    View,
-    Button,
-    FlatList,
-    Switch,
-    TouchableOpacity,
-    TouchableHighlight,
-    ToastAndroid,
-    TouchableWithoutFeedback,
-    ScrollView,
-    Alert,
-    Modal,
-    Image, ImageBackground} from 'react-native';
+import {Platform, StyleSheet, Text, View, Button, FlatList, Switch, TouchableOpacity, TouchableHighlight,
+    ToastAndroid, TouchableWithoutFeedback, ScrollView, Alert, Modal, Image, ImageBackground} from 'react-native';
 import Toast, {DURATION} from 'react-native-easy-toast'
 import { Col, Row, Grid } from 'react-native-easy-grid'
-import AwesomeButton from 'react-native-really-awesome-button';
 import { BleManager } from 'react-native-ble-plx'
-import AwesomeButtonCartman from 'react-native-really-awesome-button/src/themes/cartman';
 import base64 from 'react-native-base64'
 
 export default class App extends React.Component {
@@ -58,37 +43,6 @@ export default class App extends React.Component {
         }, true);
     }
 
-    startCountDown = () => {
-        this.myInterval = setInterval(() => {
-            this.clockWork();
-        }, 1000)
-    }
-
-    clockWork = () => {
-        if (this.state.count > 0){
-            if (this.state.count <= 10){
-                this.setState({singleDigit: true});
-            }
-            this.setState(prevState => ({
-                count: prevState.count - 1
-            }))
-        } else if(this.state.count === 0) {
-            Alert.alert("TIME'S UP!!!");
-            this.send('G');
-            this.setState({
-                singleDigit: false,
-                gameStart: false,
-                count: 15,
-            })
-            clearInterval(this.myInterval)
-        }
-
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.myInterval)
-    }
-
     scanAndConnect = () => {
         this.manager.startDeviceScan(null, null, (error, device) => {
 
@@ -115,6 +69,37 @@ export default class App extends React.Component {
                 });
             }
         });
+    }
+
+    startCountDown = () => {
+        this.myInterval = setInterval(() => {
+            this.clockWork();
+        }, 1000)
+    }
+
+    clockWork = () => {
+        if (this.state.count > 0){
+            if (this.state.count <= 10){
+                this.setState({singleDigit: true});
+            }
+            this.setState(prevState => ({
+                count: prevState.count - 1
+            }))
+        } else if(this.state.count === 0) {
+            Alert.alert("TIME'S UP!!!");
+            this.setState({
+                singleDigit: false,
+                gameStart: false,
+                count: 15,
+            });
+            clearInterval(this.myInterval);
+            this.send('G');
+        }
+
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.myInterval)
     }
 
     connectDevice = () => {
@@ -158,7 +143,7 @@ export default class App extends React.Component {
     };
 
     sendHold = (value) => {
-        if (!this.state.gameStart){
+        if (!this.state.gameStart && this.state.connection){
             this.startCountDown();
             this.setState({
                 gameStart: true,
