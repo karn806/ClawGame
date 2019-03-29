@@ -1,3 +1,3 @@
 # ClawGame
 
-## Claw Game controller by mobile application
+Claw Game controlled by mobile application
