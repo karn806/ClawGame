@@ -31,6 +31,7 @@ export default class App extends React.Component {
             count: 15,
             singleDigit: false,
             gameStart: false,
+            debugMode: false,
         }
     }
 
@@ -143,7 +144,7 @@ export default class App extends React.Component {
     };
 
     sendHold = (value) => {
-        if (!this.state.gameStart && this.state.connection){
+        if (!this.state.gameStart && !this.state.debugMode && this.state.connection){
             this.startCountDown();
             this.setState({
                 gameStart: true,
@@ -183,12 +184,26 @@ export default class App extends React.Component {
         clearTimeout(this.timer);
     };
 
+    debugMode = (value) => {
+        if(value === 'on'){
+            this.setState({
+                debugMode: true,
+            })
+        } else if (value === 'off') {
+            this.setState({
+                debugMode: false,
+            })
+        }
+    }
+
     render() {
         const count = this.state.count;
         const singleDigit = this.state.singleDigit;
         const countStart = '00:'+count;
         const countSingle = '00:0'+count;
         const connected = this.state.connection;
+        const debugStatus = this.state.debugMode;
+
         const connect = <TouchableOpacity
             style={styles.connectBtn}
             onPress={() => {
@@ -196,6 +211,7 @@ export default class App extends React.Component {
             }}>
             <Text>Connect</Text>
         </TouchableOpacity>;
+
         const disconnect = <TouchableOpacity
             style={styles.connectBtn}
             onPress={() => {
@@ -204,12 +220,33 @@ export default class App extends React.Component {
             <Text>Disconnect</Text>
         </TouchableOpacity>;
 
+        const debugOff = <TouchableOpacity
+            style={styles.debugOffBtn}
+            onPress={() => {
+                this.debugMode('off')
+            }}>
+            <Text>Debug OFF</Text>
+        </TouchableOpacity>;
+
+        const debugOn = <TouchableOpacity
+            style={styles.debugOnBtn}
+            onPress={() => {
+                this.debugMode('on')
+            }}>
+            <Text>Debug ON</Text>
+        </TouchableOpacity>;
+
         return (
             <View style={styles.container}>
                 <ImageBackground source={require('./static/bg2.png')} style={styles.bgImage}>
                     <View style={styles.toolbar}>
                         <Grid style={styles.connectContainer}>
-                            { connected ? disconnect : connect }
+                            <Row>
+                                { connected ? disconnect : connect }
+                            </Row>
+                            <Row>
+                                { debugStatus ? debugOff : debugOn }
+                            </Row>
                         </Grid>
                         <Grid style={styles.textGrid}>
                             <Text style={styles.countDownFont}>
@@ -309,6 +346,38 @@ const styles = StyleSheet.create({
     },
     controlBox: {
       margin: 10,
+    },
+    debugOnBtn:{
+        color: '#000',
+        marginTop: 10,
+        // shadowColor: '#FFF', // IOS
+        shadowOffset: { height: 1, width: 1 }, // IOS
+        shadowOpacity: 1, // IOS
+        shadowRadius: 1, //IOS
+        backgroundColor: '#5fca00',
+        elevation: 2, // Android
+        height: 40,
+        width: 87,
+        borderRadius: 3,
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
+    },
+    debugOffBtn:{
+        color: '#000',
+        marginTop: 10,
+        // shadowColor: '#FFF', // IOS
+        shadowOffset: { height: 1, width: 1 }, // IOS
+        shadowOpacity: 1, // IOS
+        shadowRadius: 1, //IOS
+        backgroundColor: '#d11b1b',
+        elevation: 2, // Android
+        height: 40,
+        width: 87,
+        borderRadius: 3,
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
     },
     connectBtn:{
         color: '#000',
