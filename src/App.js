@@ -244,9 +244,9 @@ export default class App extends React.Component {
                             <Row>
                                 { connected ? disconnect : connect }
                             </Row>
-                            <Row>
-                                { debugStatus ? debugOff : debugOn }
-                            </Row>
+                            // <Row>
+                            //     { debugStatus ? debugOff : debugOn }
+                            // </Row>
                         </Grid>
                         <Grid style={styles.textGrid}>
                             <Text style={styles.countDownFont}>
@@ -529,4 +529,3 @@ const styles = StyleSheet.create({
         borderBottomWidth:1
     }
 });
-
